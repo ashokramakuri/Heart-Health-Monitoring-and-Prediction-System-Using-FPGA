@@ -1,0 +1,32 @@
+module simple_rtl_block #
+(
+    parameter THRESHOLD = 16'd14000
+)
+(
+    input  wire        clk,
+    input  wire        rst,
+    input  wire        sample_valid,
+    input  wire [15:0] sample_in,
+
+    output reg  [15:0] sample_out,
+    output reg         flag_high
+);
+
+always @(posedge clk) begin
+    if (rst) begin
+        sample_out <= 16'd0;
+        flag_high  <= 1'b0;
+    end
+    else begin
+        if (sample_valid) begin
+            sample_out <= sample_in;
+
+            if (sample_in > THRESHOLD)
+                flag_high <= 1'b1;
+            else
+                flag_high <= 1'b0;
+        end
+    end
+end
+
+endmodule
